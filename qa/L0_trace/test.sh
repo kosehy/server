@@ -29,7 +29,9 @@ SIMPLE_HTTP_CLIENT=../clients/simple_http_infer_client
 SIMPLE_GRPC_CLIENT=../clients/simple_grpc_infer_client
 TRACE_SUMMARY=../common/trace_summary.py
 
-CLIENT_TEST=trace_endpoint_test.py
+CLIENT_TEST_PY=trace_endpoint_test.py
+CLIENT_TEST_HTTP_CC=../clients/simple_http_trace_client
+CLIENT_TEST_GRPC_CC=../clients/simple_grpc_trace_client
 CLIENT_LOG="client.log"
 TEST_RESULT_FILE="test_results.txt"
 EXPECTED_NUM_TESTS="6"
@@ -589,17 +591,67 @@ RET=0
 
 set +e
 
-python $CLIENT_TEST >>$CLIENT_LOG 2>&1
+python $CLIENT_TEST_PY >>$CLIENT_LOG.python 2>&1
 if [ $? -ne 0 ]; then
-    cat $CLIENT_LOG
+    cat $CLIENT_LOG.python
     RET=1
 else
     check_test_results $TEST_RESULT_FILE $EXPECTED_NUM_TESTS
     if [ $? -ne 0 ]; then
-        cat $CLIENT_LOG
+        cat $CLIENT_LOG.python
         echo -e "\n***\n*** Test Result Verification Failed\n***"
         RET=1
     fi
+fi
+
+set -e
+
+kill $SERVER_PID
+wait $SERVER_PID
+
+# Test HTTP client library
+SERVER_ARGS="--trace-file=global_unittest.log --trace-level=TIMESTAMPS --trace-rate=1 --model-repository=$MODELSDIR"
+SERVER_LOG="./inference_server_http.log"
+run_server
+if [ "$SERVER_PID" == "0" ]; then
+    echo -e "\n***\n*** Failed to start $SERVER\n***"
+    cat $SERVER_LOG
+    exit 1
+fi
+
+RET=0
+
+set +e
+
+$CLIENT_TEST_HTTP_CC -v -H test:1 >> ${CLIENT_LOG}.c++.http 2>&1
+if [ $? -ne 0 ]; then
+    cat ${CLIENT_LOG}.c++.http
+    RET=1
+fi
+
+set -e
+
+kill $SERVER_PID
+wait $SERVER_PID
+
+# Test GRPC client library
+SERVER_ARGS="--trace-file=global_unittest.log --trace-level=TIMESTAMPS --trace-rate=1 --model-repository=$MODELSDIR"
+SERVER_LOG="./inference_server_grpc.log"
+run_server
+if [ "$SERVER_PID" == "0" ]; then
+    echo -e "\n***\n*** Failed to start $SERVER\n***"
+    cat $SERVER_LOG
+    exit 1
+fi
+
+RET=0
+
+set +e
+
+$CLIENT_TEST_GRPC_CC -v -H test:1 >> ${CLIENT_LOG}.c++.grpc 2>&1
+if [ $? -ne 0 ]; then
+    cat ${CLIENT_LOG}.c++.grpc
+    RET=1
 fi
 
 set -e
