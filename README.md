@@ -375,7 +375,7 @@ document. Ensure posted examples are:
 
 # how to build
 ```
-build.py --extra-core-cmake-arg DTRITON_ENABLE_S3=ON \
+python3 build.py --extra-core-cmake-arg DTRITON_ENABLE_S3=ON \
          --extra-core-cmake-arg DTRITON_CORE_HEADERS_ONLY=OFF \
          --extra-core-cmake-arg DTRITON_ENABLE_GPU=OFF \
          --extra-core-cmake-arg DTRITON_ENABLE_METRICS_GPU=OFF
