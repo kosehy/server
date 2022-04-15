@@ -375,6 +375,16 @@ document. Ensure posted examples are:
 
 # how to build
 ```
+# build.py
+parser.add_argument(
+        '--extra-core-cmake-arg',
+        action='append',
+        required=False,
+        help=
+        'Extra CMake argument as <name>=<value>. The argument is passed to CMake as -D<name>=<value> and is included after all CMake arguments added by build.py for the core builds.'
+    )
+```
+```
 python3 build.py --extra-core-cmake-arg TRITON_ENABLE_S3=ON \
                  --extra-core-cmake-arg TRITON_CORE_HEADERS_ONLY=OFF \
                  --extra-core-cmake-arg TRITON_ENABLE_GPU=OFF \
