@@ -1680,6 +1680,60 @@ def enable_all():
         if ep not in FLAGS.endpoint:
             FLAGS.endpoint += [ep]
 
+def enable_custon():
+    if target_platform() != 'windows':
+        all_backends = [
+            'ensemble', 'identity', 'square', 'repeat',
+            'tensorflow2', 'onnxruntime', 'python', 'pytorch',
+        ]
+        all_repoagents = ['checksum']
+        all_filesystems = ['s3']
+        all_endpoints = ['http', 'grpc']
+
+        FLAGS.enable_logging = True
+        FLAGS.enable_stats = True
+        FLAGS.enable_metrics = True
+        FLAGS.enable_gpu_metrics = True
+        FLAGS.enable_tracing = True
+        FLAGS.enable_nvtx = True
+        FLAGS.enable_gpu = True
+    # else:
+    #     all_backends = [
+    #         'ensemble', 'identity', 'square', 'repeat', 'onnxruntime',
+    #         'openvino', 'tensorrt'
+    #     ]
+    #     all_repoagents = ['checksum']
+    #     all_filesystems = []
+    #     all_endpoints = ['http', 'grpc']
+
+    #     FLAGS.enable_logging = True
+    #     FLAGS.enable_stats = True
+    #     FLAGS.enable_tracing = True
+    #     FLAGS.enable_gpu = True
+
+    requested_backends = []
+    for be in FLAGS.backend:
+        parts = be.split(':')
+        requested_backends += [parts[0]]
+    for be in all_backends:
+        if be not in requested_backends:
+            FLAGS.backend += [be]
+
+    requested_repoagents = []
+    for ra in FLAGS.repoagent:
+        parts = ra.split(':')
+        requested_repoagents += [parts[0]]
+    for ra in all_repoagents:
+        if ra not in requested_repoagents:
+            FLAGS.repoagent += [ra]
+
+    for fs in all_filesystems:
+        if fs not in FLAGS.filesystem:
+            FLAGS.filesystem += [fs]
+
+    for ep in all_endpoints:
+        if ep not in FLAGS.endpoint:
+            FLAGS.endpoint += [ep]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -2000,6 +2054,11 @@ if __name__ == '__main__':
     # settings, backends, repo-agents, file systems, endpoints, etc.
     if FLAGS.enable_all:
         enable_all()
+
+    # if --enable-custon is specified, then update FLAGS to enable custon
+    # settings, backends, repo-agents, file systems, endpoints, etc.
+    if FLAGS.enable_custon:
+        enable_custon()
 
     # When doing a docker build, --build-dir, --install-dir and
     # --cmake-dir must not be set. We will use the build/ subdir
