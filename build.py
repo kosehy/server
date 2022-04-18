@@ -1680,7 +1680,7 @@ def enable_all():
         if ep not in FLAGS.endpoint:
             FLAGS.endpoint += [ep]
 
-def enable_custon():
+def enable_custom():
     if target_platform() != 'windows':
         all_backends = [
             'ensemble', 'identity', 'square', 'repeat',
@@ -1904,6 +1904,15 @@ if __name__ == '__main__':
         help=
         'Enable all standard released Triton features, backends, repository agents, endpoints and file systems.'
     )
+
+    parser.add_argument(
+        '--enable-custon',
+        action="store_true",
+        required=False,
+        help=
+        'Enable custom standard released Triton features, backends, repository agents, endpoints and file systems.'
+    )
+
     parser.add_argument('--enable-logging',
                         action="store_true",
                         required=False,
@@ -2057,8 +2066,8 @@ if __name__ == '__main__':
 
     # if --enable-custon is specified, then update FLAGS to enable custon
     # settings, backends, repo-agents, file systems, endpoints, etc.
-    if FLAGS.enable_custon:
-        enable_custon()
+    if FLAGS.enable_custom:
+        enable_custom()
 
     # When doing a docker build, --build-dir, --install-dir and
     # --cmake-dir must not be set. We will use the build/ subdir
