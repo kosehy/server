@@ -1683,20 +1683,19 @@ def enable_all():
 def enable_custom():
     if target_platform() != 'windows':
         all_backends = [
-            'ensemble', 'identity', 'square', 'repeat', 'tensorflow1',
-            'tensorflow2', 'onnxruntime', 'python', 'pytorch',
+            'tensorflow1',
         ]
         all_repoagents = ['checksum']
         all_filesystems = ['s3']
         all_endpoints = ['http']
 
         FLAGS.enable_logging = True
-        FLAGS.enable_stats = True
-        FLAGS.enable_metrics = True
-        FLAGS.enable_gpu_metrics = True
-        FLAGS.enable_tracing = True
-        FLAGS.enable_nvtx = True
-        FLAGS.enable_gpu = True
+        # FLAGS.enable_stats = True
+        # FLAGS.enable_metrics = True
+        # FLAGS.enable_gpu_metrics = True
+        # FLAGS.enable_tracing = True
+        # FLAGS.enable_nvtx = True
+        # FLAGS.enable_gpu = True
     # else:
     #     all_backends = [
     #         'ensemble', 'identity', 'square', 'repeat', 'onnxruntime',
