@@ -1688,7 +1688,7 @@ def enable_custom():
         ]
         all_repoagents = ['checksum']
         all_filesystems = ['s3']
-        all_endpoints = ['http', 'grpc']
+        all_endpoints = ['http']
 
         FLAGS.enable_logging = True
         FLAGS.enable_stats = True
