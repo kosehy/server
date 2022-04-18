@@ -1906,7 +1906,7 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
-        '--enable-custon',
+        '--enable-custom',
         action="store_true",
         required=False,
         help=
