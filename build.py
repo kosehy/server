@@ -1683,7 +1683,7 @@ def enable_all():
 def enable_custom():
     if target_platform() != 'windows':
         all_backends = [
-            'ensemble', 'identity', 'square', 'repeat',
+            'ensemble', 'identity', 'square', 'repeat', 'tensorflow1',
             'tensorflow2', 'onnxruntime', 'python', 'pytorch',
         ]
         all_repoagents = ['checksum']
